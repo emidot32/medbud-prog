@@ -15,6 +15,8 @@ class MainPage:
         root.iconbitmap(r"img1.ico")
         root.state("zoomed")
         root.option_add('*Dialog.msg.font', font_cal_12)
+        combobox_cal_12 = tkFont.Font(name=font_cal_10[0], size=font_cal_10[1])
+        root.option_add("*TCombobox*Listbox*Font", combobox_cal_12)
         self.root = root
         self.docx_service = docx_service
         self.file_service = file_service
@@ -69,8 +71,6 @@ class MainPage:
         self.dosage_entry = RelatedEntryWithListbox(root, sorted(set([item[1] for item in drug_list])), 387, 530,
                                                     self.drug_entry, drug_dict, entry_width=19, listbox_width=21)
 
-        combobox_cal_12 = tkFont.Font(name=font_cal_10[0], size=font_cal_10[1])
-        root.option_add("*TCombobox*Listbox*Font", combobox_cal_12)
         self.injection_method_entry = Combobox(root, values=injection_methods, font=font_cal_13, width=14)
         self.injection_method_entry.place(x=595, y=530)
 
@@ -124,7 +124,7 @@ class MainPage:
     def add_drug_to_prescriptions(self):
         try:
             drug = self.get_value_with_validation(self.drug_entry, drug_empty)
-            dosage = self.get_value_with_validation(self.dosage_entry, dosage_empty)
+            dosage = self.dosage_entry.get()
             injection_method = self.get_value_with_validation(self.injection_method_entry, injection_method_empty)
             multiplicity = self.get_value_with_validation(self.multiplicity_entry, multiplicity_empty)
             duration = self.get_value_with_validation(self.duration_entry, duration_empty)
