@@ -110,9 +110,12 @@ class ToggledFrame(tk.Frame):
 
 
 class CheckBtnWithDateEntry(tk.Checkbutton):
-    def __init__(self, root, text, width_entry, font_entry=font_cal_10, font_checkbtn=font_cal_11):
+    def __init__(self, root, text, row_index: str, col_index: str, width_entry,
+                 font_entry=font_cal_10, font_checkbtn=font_cal_11):
         self.checked = tk.IntVar()
         self.frame = tk.Frame(root)
+        self.row_num = None if row_index == '' else int(row_index)
+        self.col_num = None if col_index == '' else int(col_index)
         super().__init__(self.frame, text=text, variable=self.checked, font=font_checkbtn)
         self.date_entry = tk.Entry(self.frame, width=width_entry, font=font_entry)
         self.frame.pack(fill='both', padx=2)

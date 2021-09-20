@@ -15,6 +15,8 @@ class Prescription:
 class Survey:
     name: str
     date: str
+    row_num: int
+    col_num: int
 
 
 @dataclass

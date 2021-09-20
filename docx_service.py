@@ -31,8 +31,7 @@ class DocxService:
         self.save_document()
 
     def set_fio_and_ward(self):
-        table = self.document.tables[0]
-        cell = self.get_cell_by_value_from_table(table, "ЛИСТОК ЛІКАРСЬКИХ ПРИЗНАЧЕНЬ").cell
+        cell = self.document.tables[0].cell(2, 0)  # ЛИСТОК ЛІКАРСЬКИХ ПРИЗНАЧЕНЬ
         for par in cell.paragraphs:
             if par.text.startswith("№"):
                 par.text = ''
@@ -48,22 +47,19 @@ class DocxService:
 
     def set_mode_and_diet(self):
         table = self.document.tables[0]
-        mode_cell_info = self.get_cell_by_value_from_table(table, "Режим")
-        diet_cell_info = self.get_cell_by_value_from_table(table, "Дієта")
-        mode_cell = table.cell(mode_cell_info.col_num, mode_cell_info.col_num+1)
-        diet_cell = table.cell(diet_cell_info.col_num, diet_cell_info.col_num+1)
+        #mode_cell_info = self.get_cell_by_value_from_table(table, "Режим")
+        mode_cell = table.cell(5, 1)  # Режим
+        diet_cell = table.cell(6, 1)  # Дієта
         mode_cell.text = self.patient.mode
         diet_cell.text = self.patient.diet
 
     def set_date_range(self):
         max_duration = max([prescription.duration for prescription in self.patient.prescriptions])
         today = datetime.datetime.today()
-        table = self.document.tables[0]
-        cell_info = self.get_cell_by_value_from_table(table, "дата")
-        row = table.rows[cell_info.row_num]
+        row = self.document.tables[0].rows[4]  # дата
         self.max_date_range = []
         for i in range(max_duration):
-            index = i + cell_info.col_num + 1
+            index = i + 3  # дата.col_num + 1
             if index < len(row.cells):
                 date = today + datetime.timedelta(days=i)
                 self.max_date_range.append(date)
@@ -72,17 +68,16 @@ class DocxService:
 
     def set_prescriptions(self):
         table = self.document.tables[0]
-        doctor_cell_info = self.get_cell_by_value_from_table(table, "Лікар")
         prescriptions = self.patient.prescriptions
         for i in range(len(prescriptions)):
-            row_index = doctor_cell_info.row_num + i * 2
+            row_index = 1 + i * 2
             if row_index < len(table.rows):
                 row = table.rows[row_index]
-                prescription_cell = row.cells[doctor_cell_info.col_num - 1]
+                prescription_cell = row.cells[0]
                 presc = prescriptions[i]
                 self.set_text_to_cell(prescription_cell, f"{presc.drug_with_dosage}  {presc.injection_method}  {presc.multiplicity}", 9)
                 for j in range(presc.duration):
-                    cell_index = doctor_cell_info.col_num + 2 + j
+                    cell_index = 3 + j  # '+' start
                     if cell_index < len(row.cells):
                         plus_cell = row.cells[cell_index]
                         plus_cell.text = '  +'
@@ -90,18 +85,16 @@ class DocxService:
     def set_surveys(self):
         consultations = 1
         table = self.document.tables[1]
-        consult_cell_info = self.get_cell_by_value_from_table(table, "Консультації")
         for survey in self.patient.surveys:
-            cell_info = self.get_cell_by_value_from_table(table, survey.name)
-            if cell_info is not None:
-                date_cell = table.cell(cell_info.row_num, cell_info.col_num+1)
+            if survey.row_num is not None and survey.col_num is not None:
+                date_cell = table.cell(survey.row_num, survey.col_num+1)
                 self.set_text_to_cell(date_cell, survey.date, 10, WD_TABLE_ALIGNMENT.CENTER)
             else:
-                index = consult_cell_info.row_num+consultations
+                index = 36 + consultations  # Консультації row_num
                 if index < len(table.rows):
                     needed_consult_row = table.rows[index]
-                    consult_cell = needed_consult_row.cells[consult_cell_info.col_num]
-                    date_cell = needed_consult_row.cells[consult_cell_info.col_num + 1]
+                    consult_cell = needed_consult_row.cells[6]  # survey col_num
+                    date_cell = needed_consult_row.cells[7]  # date col_num
                     self.set_text_to_cell(consult_cell, survey.name, 10)
                     self.set_text_to_cell(date_cell, survey.date, 10, WD_TABLE_ALIGNMENT.CENTER)
                     consultations += 1
@@ -146,7 +139,8 @@ class DocxService:
         else:
             self.document.save(f"output_files/docx/{name}.docx")
 
-    def get_cell_by_value_from_table(self, table, value: str) -> CellInfo:
+    @staticmethod
+    def get_cell_by_value_from_table(table, value: str) -> CellInfo:
         for row_index in range(len(table.rows)):
             row = table.rows[row_index]
             for cell_index in range(len(row.cells)):

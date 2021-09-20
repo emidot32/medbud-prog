@@ -2,6 +2,7 @@ import os
 from abc import ABC, abstractmethod
 import xml.etree.ElementTree as et
 import json
+import xmltodict
 from types import SimpleNamespace
 from consts import *
 from data_classes import *

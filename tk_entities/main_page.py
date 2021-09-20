@@ -10,7 +10,7 @@ from tk_entities.custom_entries import *
 
 class MainPage:
     def __init__(self, root, drug_list, drug_dict, injection_methods: list, modes: list, diets: list,
-                 all_surveys: list, docx_service: DocxService, file_service: FileService):
+                 all_surveys: list[list], docx_service: DocxService, file_service: FileService):
         root.title("Medbud Preparaty")
         root.iconbitmap(r"img1.ico")
         root.state("zoomed")
@@ -80,7 +80,7 @@ class MainPage:
 
         self.duration_entry = tk.Entry(root, font=font_cal_13, width=6)
         self.duration_entry.place(x=868, y=530)
-        tk.Label(root, text="дні/днів", font=font_cal_13).place(x=940, y=524)
+        tk.Label(root, text="дні/днів", font=font_cal_13).place(x=934, y=530)
 
         tk.Label(root, text="Обстеження та консультації", font=font_cal_15_bold).place(x=1055, y=20)
         tk.Label(root, text="Оберіть потрібні обстеження,",
@@ -135,6 +135,7 @@ class MainPage:
         dosage_parts = dosage.split(' + ')
         if len(drug_parts) != len(dosage_parts):
             messagebox.showerror("Error", discrepancy_drugs_and_dosage)
+            return
         drug_dosage_result = ' + '.join([f"{drug_parts[i]} {dosage_parts[i]}" for i in range(len(drug_parts))])
         self.prescriptions \
             .append(Prescription(drug_dosage_result, injection_method, multiplicity, int(duration)))
@@ -183,19 +184,19 @@ class MainPage:
         patient = Patient(fio=patient_fio, ward=patient_ward, mode=mode, diet=diet,
                           prescriptions=self.prescriptions, surveys=self.surveys)
         self.docx_service.generate_document(patient)
-        messagebox.showinfo("Info", f"Документ для пацієнта {patient_fio} згенерований!")
+        # messagebox.showinfo("Info", f"Документ для пацієнта {patient_fio} згенерований!")
         self.file_service.save_patient(patient)
 
-    def create_all_surveys_checkbtns(self, all_surveys: list) -> list[CheckBtnWithDateEntry]:
+    def create_all_surveys_checkbtns(self, all_surveys: list[list]) -> list[CheckBtnWithDateEntry]:
         survey_btns: list[CheckBtnWithDateEntry] = []
         group: ToggledFrame = None
         for survey in all_surveys:
-            if survey.endswith(":"):
-                group = ToggledFrame(self.survey_frame, survey)
+            if survey[0].endswith(":"):
+                group = ToggledFrame(self.survey_frame, survey[0])
                 group.pack(fill="both", pady=2, expand=1, anchor="n")
             else:
                 if group is not None:
-                    check_entity = CheckBtnWithDateEntry(group.sub_frame, survey, 7)
+                    check_entity = CheckBtnWithDateEntry(group.sub_frame, survey[0], survey[1], survey[2], 7)
                     survey_btns.append(check_entity)
         return survey_btns
 
@@ -209,34 +210,6 @@ class MainPage:
         for survey_btn in self.surveys_check_btns:
             if survey_btn.is_checked():
                 survey_btn.set_date(date_str)
-
-    # def create_all_surveys_checkbtns(self, all_surveys: list) -> list[CheckBtnWithDateEntry]:
-    #     surveys_entities = []
-    #     shift = 0
-    #     i = 0
-    #     while all_surveys[i] != "Ендоскопічні:":
-    #         shift += self.create_survey_entity(all_surveys[i], i, surveys_entities, 1030, 1450, 67, shift)
-    #         i += 1
-    #     j = i
-    #     while all_surveys[j] != "Мікробіологічні:":
-    #         shift += self.create_survey_entity(all_surveys[j], j - i, surveys_entities, 720, 965, 410, shift)
-    #         j += 1
-    #     k = j
-    #     while k != len(all_surveys):
-    #         shift += self.create_survey_entity(all_surveys[k], k - j, surveys_entities, 390, 645, 410, shift)
-    #         k += 1
-    #     return surveys_entities
-    #
-    # def create_survey_entity(self, survey: str, index: int, surveys_check_entities: list[CheckBtnWithDateEntry],
-    #                          start_x: int, x_entry: int, start_y: int, shift: int) -> int:
-    #     if survey.endswith(":"):
-    #         tk.Label(self.root, text=survey, font=font_cal_13_bold).place(x=start_x - 10,
-    #                                                                       y=start_y + index * 23 + shift)
-    #         return 1
-    #     else:
-    #         check_entity = CheckBtnWithDateEntry(self.root, survey, start_x, x_entry, start_y + index * 23 + shift, 7)
-    #         surveys_check_entities.append(check_entity)
-    #         return 0
 
     def get_value_with_validation(self, entry: tk.Entry, error_message: str) -> str:
         entry_value = str(entry.get())
@@ -258,7 +231,7 @@ class MainPage:
                 f"{'%2d' % (i + 1)}. {presc.drug_with_dosage}  {presc.injection_method}  {presc.multiplicity}  {presc.duration} д.")
 
     def get_surveys(self) -> list[Survey]:
-        return [Survey(survey_checkbtn.cget("text"), survey_checkbtn.get_date())
+        return [Survey(survey_checkbtn.cget("text"), survey_checkbtn.get_date(), survey_checkbtn.row_num, survey_checkbtn.col_num)
                 for survey_checkbtn in self.surveys_check_btns if survey_checkbtn.is_checked()]
 
     def update_surveys_list(self):
