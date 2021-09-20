@@ -1,2 +1,2 @@
 # MedbudProg
-Program automize patient blank creation for the hospital.
+The program automates the creation of the patient blank for the hospital.
