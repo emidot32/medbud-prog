@@ -1,0 +1,19 @@
+<configuration font_name="Calibri" dialog_window_font_size="12" listbox_font_size="12">
+    <input_fio_label font_size="14" x="40" y="20">Введіть ПІБ пацієнта та номер палати</input_fio_label>
+    <search_btn_info_label font_size="12" x="40" y="50">Кнопка 'Пошук' заповнить поля призначення, якщо пацієнт існує</search_btn_info_label>
+    <fio_entry font_size="14" width="43" x="43" y="85"/>
+    <ward_entry font_size="14" width="7" x="501" y="85"/>
+    <search_btn font_size="11" bg_color="#B0C4DE" x="595" y="83">Пошук</search_btn>
+    <select_mode_diet_label font_size="12" x="40" y="125">Оберіть режим та дієту для пацієнта</select_mode_diet_label>
+    <mode_label font_size="14" x="40" y="150">Режим</mode_label>
+    <mode_entry font_size="13" width="14" x="43" y="180"/>
+    <diet_label font_size="14" x="222" y="150">Дієта</diet_label>
+    <diet_entry font_size="13" width="14" x="225" y="180"/>
+    <select_all_label font_size="12" x="40" y="220">Оберіть препарат, дозування, спосіб введення, кратність, тривалість</select_all_label>
+    <press_plus_btn_label font_size="12" x="40" y="240">та натисніть кнопку '+' щоб додати препарат до призначень</press_plus_btn_label>
+    <prescriptions_listbox font_size="13" width="59" height="10" x="42" y="270">та натисніть кнопку '+' щоб додати препарат до призначень</prescriptions_listbox>
+    <add_btn font_size="10" bg_color='white' fg_color='green' width="5" height="2" x="595" y="270">➕</add_btn>
+    <remove_btn font_size="10" bg_color='white' fg_color='red' width="5" height="2" x="595" y="320">❌</remove_btn>
+    <clean_btn font_size="10" bg_color='white' fg_color='red' width="5" height="2" x="595" y="370">🗑</clean_btn>
+    <generate_btn font_size="14" bg_color='#87A96B' fg_color='black' width="15" height="3" x="750" y="320">Згенерувати</generate_btn>
+</configuration>

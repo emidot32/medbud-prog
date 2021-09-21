@@ -1,6 +1,5 @@
-import threading
-from tkinter.ttk import Combobox
 import tkinter.font as tkFont
+from tkinter.ttk import Combobox
 
 from data_classes import *
 from docx_service import DocxService
@@ -10,55 +9,69 @@ from tk_entities.custom_entries import *
 
 class MainPage:
     def __init__(self, root, drug_list, drug_dict, injection_methods: list, modes: list, diets: list,
-                 all_surveys: list[list], docx_service: DocxService, file_service: FileService):
+                 all_surveys: list[list], config_dict, docx_service: DocxService, file_service: FileService):
         root.title("Medbud Preparaty")
         root.iconbitmap(r"img1.ico")
         root.state("zoomed")
-        root.option_add('*Dialog.msg.font', font_cal_12)
-        combobox_cal_12 = tkFont.Font(name=font_cal_10[0], size=font_cal_10[1])
+        root.option_add('*Dialog.msg.font', (config_dict['@font_name'], int(config_dict['@dialog_window_font_size'])))
+        combobox_cal_12 = tkFont.Font(name=config_dict['@font_name'], size=int(config_dict['@listbox_font_size']))
         root.option_add("*TCombobox*Listbox*Font", combobox_cal_12)
         self.root = root
         self.docx_service = docx_service
         self.file_service = file_service
-        tk.Label(root, text="Введіть ПІБ пацієнта та номер палати", font=font_cal_14).place(x=40, y=20)
-        tk.Label(root, text="Кнопка 'Пошук' заповнить поля призначення, якщо пацієнт існує", font=font_cal_12)\
-            .place(x=40, y=50)
-        self.fio_entry = tk.Entry(root, font=font_cal_14, width=43)
-        self.fio_entry.place(x=43, y=85)
-        self.ward_entry = tk.Entry(root, font=font_cal_14, width=7)
-        self.ward_entry.place(x=501, y=85)
-        self.search_btn = tk.Button(root, text="Пошук", command=self.search_patient, font=font_cal_11, bg='#B0C4DE')
-        self.search_btn.place(x=595, y=83)
+        self.config_dict = config_dict
+        tk.Label(root, text=config_dict['input_fio_label']['#text'], font=self.get_font_for('input_fio_label'))\
+            .place(**self.get_coords_for('input_fio_label'))
+        tk.Label(root, text=config_dict['search_btn_info_label']['#text'], font=self.get_font_for('search_btn_info_label'))\
+            .place(**self.get_coords_for('search_btn_info_label'))
+        self.fio_entry = tk.Entry(root, font=self.get_font_for('fio_entry'), width=int(config_dict['fio_entry']['@width']))
+        self.fio_entry.place(**self.get_coords_for('fio_entry'))
+        self.ward_entry = tk.Entry(root, font=self.get_font_for('ward_entry'), width=int(config_dict['ward_entry']['@width']))
+        self.ward_entry.place(**self.get_coords_for('ward_entry'))
+        self.search_btn = tk.Button(root, text=config_dict['search_btn']['#text'], command=self.search_patient,
+                                    font=self.get_font_for('search_btn'), bg=config_dict['search_btn']['@bg_color'])
+        self.search_btn.place(**self.get_coords_for('search_btn'))
 
-        tk.Label(root, text="Оберіть режим та дієту для пацієнта", font=font_cal_12).place(x=40, y=125)
-        tk.Label(root, text="Режим", font=font_cal_14).place(x=40, y=150)
-        self.mode_entry = Combobox(root, values=modes, font=font_cal_13, width=14)
-        self.mode_entry.place(x=43, y=180)
+        tk.Label(root, text=config_dict['select_mode_diet_label']['#text'], font=self.get_font_for('select_mode_diet_label'))\
+            .place(**self.get_coords_for('select_mode_diet_label'))
+        tk.Label(root, text=config_dict['mode_label']['#text'], font=self.get_font_for('mode_label'))\
+            .place(**self.get_coords_for('mode_label'))
+        self.mode_entry = Combobox(root, values=modes, font=self.get_font_for('mode_entry'), width=config_dict['mode_entry']['@width'])
+        self.mode_entry.place(**self.get_coords_for('mode_entry'))
+        tk.Label(root, text=config_dict['diet_label']['#text'], font=self.get_font_for('diet_label'))\
+            .place(**self.get_coords_for('diet_label'))
+        self.diet_entry = Combobox(root, values=diets, font=self.get_font_for('diet_entry'), width=config_dict['diet_entry']['@width'])
+        self.diet_entry.place(**self.get_coords_for('diet_entry'))
 
-        tk.Label(root, text="Дієта", font=font_cal_14).place(x=222, y=150)
-        self.diet_entry = Combobox(root, values=diets, font=font_cal_13, width=8)
-        self.diet_entry.place(x=225, y=180)
-
-        tk.Label(root, text="Оберіть препарат, дозування, спосіб введення, кратність, тривалість", font=font_cal_12) \
-            .place(x=40, y=220)
-        tk.Label(root, text="та натисніть кнопку '+' щоб додати препарат до призначень", font=font_cal_12) \
-            .place(x=40, y=240)
-        self.prescriptions_list = tk.Listbox(root, font=font_cal_13, width=59, height=10)
-        self.prescriptions_list.place(x=42, y=270)
+        tk.Label(root, text=config_dict['select_all_label']['#text'], font=self.get_font_for('select_all_label')) \
+            .place(**self.get_coords_for('select_all_label'))
+        tk.Label(root, text=config_dict['press_plus_btn_label']['#text'], font=self.get_font_for('press_plus_btn_label')) \
+            .place(**self.get_coords_for('press_plus_btn_label'))
+        self.prescriptions_list = tk.Listbox(root, font=self.get_font_for('prescriptions_listbox'),
+                                             width=config_dict['prescriptions_listbox']['@width'],
+                                             height=config_dict['prescriptions_listbox']['@height'])
+        self.prescriptions_list.place(**self.get_coords_for('prescriptions_listbox'))
         self.prescriptions: list[Prescription] = []
-        self.add_btn = tk.Button(root, text='\u2795', command=self.add_drug_to_prescriptions, bg='white', fg='green',
-                                 width=5, height=2)
-        self.add_btn.place(x=595, y=270)
-        self.remove_btn = tk.Button(root, text='\u274C', command=self.remove_drug_from_prescriptions, bg='white',
-                                    fg='red', width=5, height=2)
-        self.remove_btn.place(x=595, y=320)
-        self.clean_btn = tk.Button(root, text='\U0001F5D1', command=self.clean_all_entries, bg='white',
-                                   fg='red', width=5, height=2)
-        self.clean_btn.place(x=595, y=370)
-        self.generate_btn = tk.Button(root, text="Згенерувати", command=lambda: threading.Thread(target=self.generate_files).start(),
-                                      font=font_cal_14, width=15, height=3, bg='#87A96B')
-        # self.generate_btn.place(x=765, y=182)
-        self.generate_btn.place(x=750, y=320)
+        self.add_btn = tk.Button(root, text=config_dict['add_btn']['#text'], font=self.get_font_for('add_btn'),
+                                 command=self.add_drug_to_prescriptions,
+                                 bg=config_dict['add_btn']['@bg_color'], fg=config_dict['add_btn']['@fg_color'],
+                                 width=config_dict['add_btn']['@width'], height=config_dict['add_btn']['@height'])
+        self.add_btn.place(**self.get_coords_for('add_btn'))
+        self.remove_btn = tk.Button(root, text=config_dict['remove_btn']['#text'], font=self.get_font_for('remove_btn'),
+                                    command=self.remove_drug_from_prescriptions,
+                                    bg=config_dict['remove_btn']['@bg_color'], fg=config_dict['remove_btn']['@fg_color'],
+                                    width=config_dict['remove_btn']['@width'], height=config_dict['remove_btn']['@height'])
+        self.remove_btn.place(**self.get_coords_for('remove_btn'))
+        self.clean_btn = tk.Button(root, text=config_dict['clean_btn']['#text'], font=self.get_font_for('clean_btn'),
+                                   command=self.remove_drug_from_prescriptions,
+                                   bg=config_dict['clean_btn']['@bg_color'], fg=config_dict['clean_btn']['@fg_color'],
+                                   width=config_dict['clean_btn']['@width'], height=config_dict['clean_btn']['@height'])
+        self.clean_btn.place(**self.get_coords_for('clean_btn'))
+        self.generate_btn = tk.Button(root, text=config_dict['generate_btn']['#text'], command=self.generate_files,
+                                      font=self.get_font_for('generate_btn'),
+                                      bg=config_dict['generate_btn']['@bg_color'], fg=config_dict['generate_btn']['@fg_color'],
+                                      width=config_dict['generate_btn']['@width'], height=config_dict['generate_btn']['@height'])
+        self.generate_btn.place(**self.get_coords_for('generate_btn'))
 
         tk.Label(root, text="Препарати", font=font_cal_14).place(x=40, y=500)
         tk.Label(root, text="Дозування", font=font_cal_14).place(x=385, y=500)
@@ -242,3 +255,9 @@ class MainPage:
                 if survey.name == survey_checkbtn.cget("text"):
                     survey_checkbtn.set_checked(True)
                     survey_checkbtn.set_date(survey.date)
+
+    def get_font_for(self, entity_key: str):
+        return self.config_dict['@font_name'], int(self.config_dict[entity_key]['@font_size'])
+
+    def get_coords_for(self, entity_key: str):
+        return {'x': self.config_dict[entity_key]['@x'], 'y': self.config_dict[entity_key]['@y']}

@@ -70,7 +70,7 @@ class DocxService:
         table = self.document.tables[0]
         prescriptions = self.patient.prescriptions
         for i in range(len(prescriptions)):
-            row_index = 1 + i * 2
+            row_index = 7 + i * 2
             if row_index < len(table.rows):
                 row = table.rows[row_index]
                 prescription_cell = row.cells[0]
