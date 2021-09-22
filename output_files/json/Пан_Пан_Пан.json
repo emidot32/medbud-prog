@@ -1,0 +1,52 @@
+{
+    "fio": "Пан Пан Пан",
+    "ward": "121",
+    "diet": "1а",
+    "mode": "Напівліжковий",
+    "prescriptions": [
+        {
+            "drug_with_dosage": "Аксеф 0,75 г",
+            "injection_method": "п/ш",
+            "multiplicity": "2 р/д",
+            "duration": 2
+        },
+        {
+            "drug_with_dosage": "Актовегін 10 мл + NaCl 0,9 % 100 мл",
+            "injection_method": "в/в крап.",
+            "multiplicity": "2 р/д",
+            "duration": 3
+        }
+    ],
+    "surveys": [
+        {
+            "name": "Колоноскопія",
+            "date": "12.09",
+            "row_num": 31,
+            "col_num": 0
+        },
+        {
+            "name": "Серологічні реакції на сифіліс",
+            "date": "12.09",
+            "row_num": 3,
+            "col_num": 6
+        },
+        {
+            "name": "Аналіз крові на HCV",
+            "date": "12.09",
+            "row_num": 4,
+            "col_num": 6
+        },
+        {
+            "name": "Гінеколог",
+            "date": "12.09",
+            "row_num": null,
+            "col_num": null
+        },
+        {
+            "name": "Анестезіолог",
+            "date": "12.09",
+            "row_num": null,
+            "col_num": null
+        }
+    ]
+}

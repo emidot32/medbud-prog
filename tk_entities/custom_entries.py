@@ -7,34 +7,31 @@ from consts import *
 
 class AutocompleteEntryWithListbox(tk.Entry):
 
-    def __init__(self, root, list_of_values, start_x, start_y, entry_width, listbox_width, font=('Calibri', 13)):
-        frame = tk.Frame(root)
-        super().__init__(frame, font=font, width=entry_width)
+    def __init__(self, root, list_of_values, entry_width,
+                 entry_font=('Calibri', 13), listbox_font=('Calibri', 12)):
+        self.full_frame = tk.Frame(root)
+        entry_frame = tk.Frame(self.full_frame)
+        super().__init__(entry_frame, font=entry_font, width=entry_width)
         self.root = root
-        self.frame = tk.Frame(root)
         self.list_box = None
         self.list_of_values = list_of_values
         self.hints = list_of_values
-        self.listbox_width = listbox_width
-        self.font = font
-        self.start_x = start_x
-        self.start_y = start_y
+        self.listbox_font = listbox_font
         self.extension_flag = False
         self.bind('<KeyRelease>', self.autocomplete)
-        self.ext_btn = tk.Button(frame, text='\u02c5', bg='white', borderwidth=1, command=self.roll_up_or_down_list_values)
+        self.ext_btn = tk.Button(entry_frame, text='\u02c5', bg='white', borderwidth=1, command=self.roll_up_or_down_list_values)
         self.pack(side=tk.LEFT)
         self.ext_btn.pack(side=tk.LEFT)
-        frame.place(x=start_x, y=start_y)
+        entry_frame.pack()
 
     def roll_up_or_down_list_values(self):
         self.roll_up_for_not_related_entry(10)
 
     def roll_up_for_not_related_entry(self, listbox_height):
         if not self.extension_flag:
-            listbox_font = (self.font[0], self.font[1]-1)
-            self.list_box = tk.Listbox(self.root, width=self.listbox_width, height=listbox_height, font=listbox_font)
+            self.list_box = tk.Listbox(self.full_frame, height=listbox_height, font=self.listbox_font)
             self.list_box.bind('<<ListboxSelect>>', self.fill_out)
-            self.list_box.place(x=self.start_x, y=self.start_y + 26)
+            self.list_box.pack(fill='both')
             self.extension_flag = True
             self.update_listbox(self.list_of_values)
 
@@ -64,11 +61,14 @@ class AutocompleteEntryWithListbox(tk.Entry):
 
         self.update_listbox(self.hints)
 
+    def place(self, x, y):
+        self.full_frame.place(x=x, y=y)
+
 
 class RelatedEntryWithListbox(AutocompleteEntryWithListbox):
-    def __init__(self, root, list_of_values, start_x, start_y, related_entry, dict_of_associations, entry_width,
-                 listbox_width, font=('Calibri', 13)):
-        super().__init__(root, list_of_values, start_x, start_y, entry_width, listbox_width, font)
+    def __init__(self, root, list_of_values, related_entry, dict_of_associations, entry_width,
+                 entry_font=('Calibri', 13), listbox_font=('Calibri', 12)):
+        super().__init__(root, list_of_values, entry_width, entry_font, listbox_font)
         self.related_entry = related_entry
         self.dict_of_associations = dict_of_associations
 
@@ -111,13 +111,13 @@ class ToggledFrame(tk.Frame):
 
 class CheckBtnWithDateEntry(tk.Checkbutton):
     def __init__(self, root, text, row_index: str, col_index: str, width_entry,
-                 font_entry=font_cal_10, font_checkbtn=font_cal_11):
+                 entry_font=font_cal_10, checkbtn_font=font_cal_11):
         self.checked = tk.IntVar()
         self.frame = tk.Frame(root)
         self.row_num = None if row_index == '' else int(row_index)
         self.col_num = None if col_index == '' else int(col_index)
-        super().__init__(self.frame, text=text, variable=self.checked, font=font_checkbtn)
-        self.date_entry = tk.Entry(self.frame, width=width_entry, font=font_entry)
+        super().__init__(self.frame, text=text, variable=self.checked, font=checkbtn_font)
+        self.date_entry = tk.Entry(self.frame, width=width_entry, font=entry_font)
         self.frame.pack(fill='both', padx=2)
         self.pack(side=tk.LEFT)
         self.date_entry.pack(side=tk.LEFT)

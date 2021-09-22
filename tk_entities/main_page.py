@@ -73,27 +73,42 @@ class MainPage:
                                       width=config_dict['generate_btn']['@width'], height=config_dict['generate_btn']['@height'])
         self.generate_btn.place(**self.get_coords_for('generate_btn'))
 
-        tk.Label(root, text="Препарати", font=font_cal_14).place(x=40, y=500)
-        tk.Label(root, text="Дозування", font=font_cal_14).place(x=385, y=500)
-        tk.Label(root, text="Спосіб введення", font=font_cal_14).place(x=593, y=500)
-        tk.Label(root, text="Кратність", font=font_cal_14).place(x=760, y=500)
-        tk.Label(root, text="Тривалість", font=font_cal_14).place(x=865, y=500)
+        tk.Label(root, text=config_dict['drugs_label']['#text'], font=self.get_font_for('drugs_label'))\
+            .place(**self.get_coords_for('drugs_label'))
+        tk.Label(root, text=config_dict['dosage_label']['#text'], font=self.get_font_for('dosage_label')) \
+            .place(**self.get_coords_for('dosage_label'))
+        tk.Label(root, text=config_dict['inject_method_label']['#text'], font=self.get_font_for('inject_method_label')) \
+            .place(**self.get_coords_for('inject_method_label'))
+        tk.Label(root, text=config_dict['multiplicity_label']['#text'], font=self.get_font_for('multiplicity_label')) \
+            .place(**self.get_coords_for('multiplicity_label'))
+        tk.Label(root, text=config_dict['duration_label']['#text'], font=self.get_font_for('duration_label')) \
+            .place(**self.get_coords_for('duration_label'))
 
         self.drug_entry = AutocompleteEntryWithListbox(root, sorted(set([item[0] for item in drug_list])),
-                                                       43, 530, entry_width=34, listbox_width=37)
-        self.dosage_entry = RelatedEntryWithListbox(root, sorted(set([item[1] for item in drug_list])), 387, 530,
-                                                    self.drug_entry, drug_dict, entry_width=19, listbox_width=21)
+                                                       entry_width=config_dict['drug_entry']['@entry_width'],
+                                                       entry_font=self.get_font_for('drug_entry', '@entry_font_size'),
+                                                       listbox_font=self.get_font_for('drug_entry', '@listbox_font_size'))
+        self.drug_entry.place(**self.get_coords_for('drug_entry'))
+        self.dosage_entry = RelatedEntryWithListbox(root, sorted(set([item[1] for item in drug_list])), self.drug_entry, drug_dict,
+                                                    entry_width=config_dict['dosage_entry']['@entry_width'],
+                                                    entry_font=self.get_font_for('dosage_entry', '@entry_font_size'),
+                                                    listbox_font=self.get_font_for('dosage_entry', '@listbox_font_size'))
+        self.dosage_entry.place(**self.get_coords_for('dosage_entry'))
+        self.injection_method_entry = Combobox(root, values=injection_methods, 
+                                               font=self.get_font_for('inject_method_entry'), 
+                                               width=config_dict['inject_method_entry']['@width'])
+        self.injection_method_entry.place(**self.get_coords_for('inject_method_entry'))
 
-        self.injection_method_entry = Combobox(root, values=injection_methods, font=font_cal_13, width=14)
-        self.injection_method_entry.place(x=595, y=530)
+        self.multiplicity_entry = Combobox(root, values=[f"{i} р/д" for i in range(1, 4)],
+                                           font=self.get_font_for('multiplicity_entry'),
+                                           width=config_dict['multiplicity_entry']['@width'])
+        self.multiplicity_entry.place(**self.get_coords_for('multiplicity_entry'))
 
-        self.multiplicity_entry = Combobox(root, values=[str(i) + " р/д" for i in range(1, 4)],
-                                           font=font_cal_13, width=7)
-        self.multiplicity_entry.place(x=763, y=530)
-
-        self.duration_entry = tk.Entry(root, font=font_cal_13, width=6)
-        self.duration_entry.place(x=868, y=530)
-        tk.Label(root, text="дні/днів", font=font_cal_13).place(x=934, y=530)
+        self.duration_entry = tk.Entry(root, font=self.get_font_for('duration_entry'), 
+                                       width=config_dict['duration_entry']['@width'])
+        self.duration_entry.place(**self.get_coords_for('duration_entry'))
+        tk.Label(root, text=config_dict['days_label']['#text'], font=self.get_font_for('days_label'))\
+            .place(**self.get_coords_for('days_label'))
 
         tk.Label(root, text="Обстеження та консультації", font=font_cal_15_bold).place(x=1055, y=20)
         tk.Label(root, text="Оберіть потрібні обстеження,",
@@ -256,8 +271,8 @@ class MainPage:
                     survey_checkbtn.set_checked(True)
                     survey_checkbtn.set_date(survey.date)
 
-    def get_font_for(self, entity_key: str):
-        return self.config_dict['@font_name'], int(self.config_dict[entity_key]['@font_size'])
+    def get_font_for(self, entity_key: str, font_key='@font_size'):
+        return self.config_dict['@font_name'], int(self.config_dict[entity_key][font_key])
 
     def get_coords_for(self, entity_key: str):
         return {'x': self.config_dict[entity_key]['@x'], 'y': self.config_dict[entity_key]['@y']}

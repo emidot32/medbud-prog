@@ -16,4 +16,15 @@
     <remove_btn font_size="10" bg_color='white' fg_color='red' width="5" height="2" x="595" y="320">❌</remove_btn>
     <clean_btn font_size="10" bg_color='white' fg_color='red' width="5" height="2" x="595" y="370">🗑</clean_btn>
     <generate_btn font_size="14" bg_color='#87A96B' fg_color='black' width="15" height="3" x="750" y="320">Згенерувати</generate_btn>
+    <drugs_label font_size="14" x="40" y="500">Препарати</drugs_label>
+    <dosage_label font_size="14" x="385" y="500">Дозування</dosage_label>
+    <inject_method_label font_size="14" x="593" y="500">Спосіб введення</inject_method_label>
+    <multiplicity_label font_size="14" x="760" y="500">Кратність</multiplicity_label>
+    <duration_label font_size="14" x="865" y="500">Тривалість</duration_label>
+    <drug_entry entry_width="34" entry_font_size="13" listbox_font_size="12" x="43" y="530"/>
+    <dosage_entry entry_width="19" entry_font_size="13" listbox_font_size="12" x="387" y="530"/>
+    <inject_method_entry font_size="13" width="14" x="595" y="530"/>
+    <multiplicity_entry font_size="13" width="7" x="763" y="530"/>
+    <duration_entry font_size="13" width="6" x="868" y="530"/>
+    <days_label font_size="13" x="934" y="530">дні/днів</days_label>
 </configuration>
