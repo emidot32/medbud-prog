@@ -110,19 +110,17 @@ class ToggledFrame(tk.Frame):
 
 
 class CheckBtnWithDateEntry(tk.Checkbutton):
-    def __init__(self, root, text, row_index: str, col_index: str, width_entry,
+    def __init__(self, root, text, row_index: str, col_index: str, entry_width,
                  entry_font=font_cal_10, checkbtn_font=font_cal_11):
         self.checked = tk.IntVar()
         self.frame = tk.Frame(root)
         self.row_num = None if row_index == '' else int(row_index)
         self.col_num = None if col_index == '' else int(col_index)
         super().__init__(self.frame, text=text, variable=self.checked, font=checkbtn_font)
-        self.date_entry = tk.Entry(self.frame, width=width_entry, font=entry_font)
+        self.date_entry = tk.Entry(self.frame, width=entry_width, font=entry_font)
         self.frame.pack(fill='both', padx=2)
         self.pack(side=tk.LEFT)
         self.date_entry.pack(side=tk.LEFT)
-        # self.place(x=start_x_checkbtn, y=start_y)
-        # self.date_entry.place(x=start_x_entry, y=start_y+4)
 
     def get_date(self) -> str:
         date_str = self.date_entry.get()

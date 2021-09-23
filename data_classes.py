@@ -23,8 +23,8 @@ class Survey:
 class Patient:
     fio: str
     ward: str
-    diet: str
     mode: str
+    diet: str
     prescriptions: list[Prescription]
     surveys: list[Survey]
 

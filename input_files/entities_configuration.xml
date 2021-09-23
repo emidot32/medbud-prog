@@ -3,7 +3,7 @@
     <search_btn_info_label font_size="12" x="40" y="50">Кнопка 'Пошук' заповнить поля призначення, якщо пацієнт існує</search_btn_info_label>
     <fio_entry font_size="14" width="43" x="43" y="85"/>
     <ward_entry font_size="14" width="7" x="501" y="85"/>
-    <search_btn font_size="11" bg_color="#B0C4DE" x="595" y="83">Пошук</search_btn>
+    <search_btn font_size="11" bg_color="#B0C4DE" fg_color="black" x="595" y="83">Пошук</search_btn>
     <select_mode_diet_label font_size="12" x="40" y="125">Оберіть режим та дієту для пацієнта</select_mode_diet_label>
     <mode_label font_size="14" x="40" y="150">Режим</mode_label>
     <mode_entry font_size="13" width="14" x="43" y="180"/>
@@ -27,4 +27,14 @@
     <multiplicity_entry font_size="13" width="7" x="763" y="530"/>
     <duration_entry font_size="13" width="6" x="868" y="530"/>
     <days_label font_size="13" x="934" y="530">дні/днів</days_label>
+    <survey_date_info1_label font_size="13" x="700" y="150">Оберіть потрібні обстеження,</survey_date_info1_label>
+    <survey_date_info2_label font_size="13" x="700" y="173">введіть в поле необхідну дату для них</survey_date_info2_label>
+    <survey_date_info3_label font_size="13" x="700" y="196">та натисніть кнопку 'Проставити дату'</survey_date_info3_label>
+    <date_format_label font_size="12" x="700" y="220">Формат дати: 'день'.'місяць'</date_format_label>
+    <date_label font_size="13" x="700" y="250">Дата:</date_label>
+    <date_entry font_size="12" width="6" x="750" y="252"/>
+    <propagate_date_btn font_size="12" bg_color="#B0C4DE" fg_color="black" width="6" x="820" y="245">Проставити дату</propagate_date_btn>
+    <surveys_consults_label font_size="15" x="1055" y="20">Обстеження та консультації</surveys_consults_label>
+    <survey_groups_frame font_size="14" x="1030" y="55"/>
+    <survey_check_btn entry_font_size="10" checkbtn_font_size="11" entry_width="7"/>
 </configuration>

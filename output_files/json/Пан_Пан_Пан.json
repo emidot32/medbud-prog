@@ -1,40 +1,52 @@
 {
     "fio": "Пан Пан Пан",
     "ward": "121",
-    "diet": "1а",
-    "mode": "Напівліжковий",
+    "diet": "Напівліжковий",
+    "mode": "1б",
     "prescriptions": [
         {
-            "drug_with_dosage": "Аксеф 0,75 г",
+            "drug_with_dosage": "Актовегін 2 таб.",
             "injection_method": "п/ш",
-            "multiplicity": "2 р/д",
-            "duration": 2
+            "multiplicity": "1 р/д",
+            "duration": 3
         },
         {
-            "drug_with_dosage": "Актовегін 10 мл + NaCl 0,9 % 100 мл",
-            "injection_method": "в/в крап.",
+            "drug_with_dosage": "Аспаркам 10 мл + MgSo4 10 мл + NaCl 0,9 % 200 мл",
+            "injection_method": "в/в стр.",
             "multiplicity": "2 р/д",
-            "duration": 3
+            "duration": 4
         }
     ],
     "surveys": [
         {
-            "name": "Колоноскопія",
+            "name": "Аналіз крові на глюкозу",
             "date": "12.09",
-            "row_num": 31,
+            "row_num": 5,
             "col_num": 0
         },
         {
-            "name": "Серологічні реакції на сифіліс",
+            "name": "Аналіз сечі на діастазу",
             "date": "12.09",
-            "row_num": 3,
-            "col_num": 6
+            "row_num": 22,
+            "col_num": 0
         },
         {
-            "name": "Аналіз крові на HCV",
+            "name": "Рентгеноскопія шлунка та ДПК",
             "date": "12.09",
-            "row_num": 4,
-            "col_num": 6
+            "row_num": 5,
+            "col_num": 3
+        },
+        {
+            "name": "Рентгенографія плечової кістки в 2 проекціях",
+            "date": "12.09",
+            "row_num": 16,
+            "col_num": 3
+        },
+        {
+            "name": "КТ",
+            "date": "12.09",
+            "row_num": 39,
+            "col_num": 3
         },
         {
             "name": "Гінеколог",

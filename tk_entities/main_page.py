@@ -9,7 +9,7 @@ from tk_entities.custom_entries import *
 
 class MainPage:
     def __init__(self, root, drug_list, drug_dict, injection_methods: list, modes: list, diets: list,
-                 all_surveys: list[list], config_dict, docx_service: DocxService, file_service: FileService):
+                 all_surveys: list[list], config_dict: dict, docx_service: DocxService, file_service: FileService):
         root.title("Medbud Preparaty")
         root.iconbitmap(r"img1.ico")
         root.state("zoomed")
@@ -20,33 +20,24 @@ class MainPage:
         self.docx_service = docx_service
         self.file_service = file_service
         self.config_dict = config_dict
-        tk.Label(root, text=config_dict['input_fio_label']['#text'], font=self.get_font_for('input_fio_label'))\
-            .place(**self.get_coords_for('input_fio_label'))
-        tk.Label(root, text=config_dict['search_btn_info_label']['#text'], font=self.get_font_for('search_btn_info_label'))\
-            .place(**self.get_coords_for('search_btn_info_label'))
+        for key in config_dict.keys():
+            if "_label" in key:
+                tk.Label(root, text=config_dict[key]['#text'], font=self.get_font_for(key)).place(**self.get_coords_for(key))
+
         self.fio_entry = tk.Entry(root, font=self.get_font_for('fio_entry'), width=int(config_dict['fio_entry']['@width']))
         self.fio_entry.place(**self.get_coords_for('fio_entry'))
         self.ward_entry = tk.Entry(root, font=self.get_font_for('ward_entry'), width=int(config_dict['ward_entry']['@width']))
         self.ward_entry.place(**self.get_coords_for('ward_entry'))
         self.search_btn = tk.Button(root, text=config_dict['search_btn']['#text'], command=self.search_patient,
-                                    font=self.get_font_for('search_btn'), bg=config_dict['search_btn']['@bg_color'])
+                                    font=self.get_font_for('search_btn'), bg=config_dict['search_btn']['@bg_color'],
+                                    fg=config_dict['search_btn']['@fg_color'])
         self.search_btn.place(**self.get_coords_for('search_btn'))
 
-        tk.Label(root, text=config_dict['select_mode_diet_label']['#text'], font=self.get_font_for('select_mode_diet_label'))\
-            .place(**self.get_coords_for('select_mode_diet_label'))
-        tk.Label(root, text=config_dict['mode_label']['#text'], font=self.get_font_for('mode_label'))\
-            .place(**self.get_coords_for('mode_label'))
         self.mode_entry = Combobox(root, values=modes, font=self.get_font_for('mode_entry'), width=config_dict['mode_entry']['@width'])
         self.mode_entry.place(**self.get_coords_for('mode_entry'))
-        tk.Label(root, text=config_dict['diet_label']['#text'], font=self.get_font_for('diet_label'))\
-            .place(**self.get_coords_for('diet_label'))
         self.diet_entry = Combobox(root, values=diets, font=self.get_font_for('diet_entry'), width=config_dict['diet_entry']['@width'])
         self.diet_entry.place(**self.get_coords_for('diet_entry'))
 
-        tk.Label(root, text=config_dict['select_all_label']['#text'], font=self.get_font_for('select_all_label')) \
-            .place(**self.get_coords_for('select_all_label'))
-        tk.Label(root, text=config_dict['press_plus_btn_label']['#text'], font=self.get_font_for('press_plus_btn_label')) \
-            .place(**self.get_coords_for('press_plus_btn_label'))
         self.prescriptions_list = tk.Listbox(root, font=self.get_font_for('prescriptions_listbox'),
                                              width=config_dict['prescriptions_listbox']['@width'],
                                              height=config_dict['prescriptions_listbox']['@height'])
@@ -73,17 +64,6 @@ class MainPage:
                                       width=config_dict['generate_btn']['@width'], height=config_dict['generate_btn']['@height'])
         self.generate_btn.place(**self.get_coords_for('generate_btn'))
 
-        tk.Label(root, text=config_dict['drugs_label']['#text'], font=self.get_font_for('drugs_label'))\
-            .place(**self.get_coords_for('drugs_label'))
-        tk.Label(root, text=config_dict['dosage_label']['#text'], font=self.get_font_for('dosage_label')) \
-            .place(**self.get_coords_for('dosage_label'))
-        tk.Label(root, text=config_dict['inject_method_label']['#text'], font=self.get_font_for('inject_method_label')) \
-            .place(**self.get_coords_for('inject_method_label'))
-        tk.Label(root, text=config_dict['multiplicity_label']['#text'], font=self.get_font_for('multiplicity_label')) \
-            .place(**self.get_coords_for('multiplicity_label'))
-        tk.Label(root, text=config_dict['duration_label']['#text'], font=self.get_font_for('duration_label')) \
-            .place(**self.get_coords_for('duration_label'))
-
         self.drug_entry = AutocompleteEntryWithListbox(root, sorted(set([item[0] for item in drug_list])),
                                                        entry_width=config_dict['drug_entry']['@entry_width'],
                                                        entry_font=self.get_font_for('drug_entry', '@entry_font_size'),
@@ -107,26 +87,16 @@ class MainPage:
         self.duration_entry = tk.Entry(root, font=self.get_font_for('duration_entry'), 
                                        width=config_dict['duration_entry']['@width'])
         self.duration_entry.place(**self.get_coords_for('duration_entry'))
-        tk.Label(root, text=config_dict['days_label']['#text'], font=self.get_font_for('days_label'))\
-            .place(**self.get_coords_for('days_label'))
 
-        tk.Label(root, text="Обстеження та консультації", font=font_cal_15_bold).place(x=1055, y=20)
-        tk.Label(root, text="Оберіть потрібні обстеження,",
-                 font=font_cal_13).place(x=700, y=150)
-        tk.Label(root, text="введіть в поле необхідну дату для них",
-                 font=font_cal_13).place(x=700, y=173)
-        tk.Label(root, text="та натисніть кнопку 'Проставити дату'",
-                 font=font_cal_13).place(x=700, y=196)
-        tk.Label(root, text="Формат дати: 'день'.'місяць'", font=font_cal_12).place(x=700, y=220)
-        tk.Label(root, text="Дата:", font=font_cal_13).place(x=700, y=250)
-        self.common_date = tk.Entry(root, font=font_cal_12, width=6)
-        self.common_date.place(x=750, y=252)
-        self.propagate_date = tk.Button(root, text="Проставити дату", command=self.set_date_to_surveys,
-                                        font=font_cal_12, bg='#B0C4DE')
-        self.propagate_date.place(x=820, y=245)
+        self.common_date = tk.Entry(root, font=self.get_font_for('date_entry'), width=config_dict['date_entry']['@width'])
+        self.common_date.place(**self.get_coords_for('date_entry'))
+        self.propagate_date = tk.Button(root, text=config_dict['propagate_date_btn']['#text'],
+                                        command=self.set_date_to_surveys, font=self.get_font_for('propagate_date_btn'),
+                                        bg=config_dict['propagate_date_btn']['@bg_color'], fg=config_dict['propagate_date_btn']['@fg_color'])
+        self.propagate_date.place(**self.get_coords_for('propagate_date_btn'))
 
         self.survey_frame = tk.Frame(root)
-        self.survey_frame.place(x=1030, y=65)
+        self.survey_frame.place(**self.get_coords_for('survey_groups_frame'))
         self.surveys_check_btns: list[CheckBtnWithDateEntry] = self.create_all_surveys_checkbtns(all_surveys)
         self.surveys: list[Survey] = []
 
@@ -209,8 +179,7 @@ class MainPage:
             messagebox.showerror("Error", prescriptions_empty)
             return
 
-        patient = Patient(fio=patient_fio, ward=patient_ward, mode=mode, diet=diet,
-                          prescriptions=self.prescriptions, surveys=self.surveys)
+        patient = Patient(patient_fio, patient_ward, mode, diet, self.prescriptions, self.surveys)
         self.docx_service.generate_document(patient)
         # messagebox.showinfo("Info", f"Документ для пацієнта {patient_fio} згенерований!")
         self.file_service.save_patient(patient)
@@ -220,11 +189,14 @@ class MainPage:
         group: ToggledFrame = None
         for survey in all_surveys:
             if survey[0].endswith(":"):
-                group = ToggledFrame(self.survey_frame, survey[0])
+                group = ToggledFrame(self.survey_frame, survey[0], self.get_font_for('survey_groups_frame'))
                 group.pack(fill="both", pady=2, expand=1, anchor="n")
             else:
                 if group is not None:
-                    check_entity = CheckBtnWithDateEntry(group.sub_frame, survey[0], survey[1], survey[2], 7)
+                    check_entity = CheckBtnWithDateEntry(group.sub_frame, survey[0], survey[1], survey[2],
+                                                         entry_width=self.config_dict['survey_check_btn']['@entry_width'],
+                                                         entry_font=self.get_font_for('survey_check_btn', '@entry_font_size'),
+                                                         checkbtn_font=self.get_font_for('survey_check_btn', '@checkbtn_font_size'))
                     survey_btns.append(check_entity)
         return survey_btns
 
